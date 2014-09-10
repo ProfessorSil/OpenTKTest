@@ -15,6 +15,7 @@ namespace OpenTKTest
     {
         public OpenTK.GameWindow window;
         int Texture1;
+        float rotation = 0;
 
         /// <summary>
         /// This automatically binds Game1's function to window's events
@@ -31,6 +32,8 @@ namespace OpenTKTest
 
             window.VSync = VSyncMode.Off;
 
+            My.Initialize(window);
+
             Spritebatch.Initialize(window);
 
             Vector2 o = Calc.RotateAround(new Vector2(4, 3), new Vector2(2, 2), MathHelper.PiOver3);
@@ -38,7 +41,7 @@ namespace OpenTKTest
 
         public void Load(object sender, EventArgs e)
         {
-            Texture1 = ContentPipe.LoadTexture(@".\Content\block1.png");
+            Texture1 = ContentPipe.LoadTexture(@".\Content\shutdown.png");
 
             Console.WriteLine("Texture1 is " + Texture1.ToString() + ".");
         }
@@ -50,11 +53,20 @@ namespace OpenTKTest
 
         public void Update(object sender, EventArgs e)
         {
+            My.Update();
+
             if (window.Keyboard[Key.Escape])
             {
                 this.Close();
                 window.Exit();
             }
+
+            if (My.MouseDown(false))
+            {
+                rotation += 10;
+            }
+
+            My.UpdateAfter();
         }
 
         public void Render(object sender, EventArgs e)
@@ -75,8 +87,8 @@ namespace OpenTKTest
             GL.TexCoord2(0.0, 1.0);
             GL.Vertex3(-0.8f, -0.8f, 0.0f);
 
+            Spritebatch.Draw(Texture1, new Vector2(20, 20), new Vector2(100, 100), MathHelper.DegreesToRadians(rotation), Color.Red, new Vector2(20, 20));
             Spritebatch.Draw(Texture1, new Vector2(20, 20), new Vector2(100, 100), MathHelper.DegreesToRadians(20));
-            Spritebatch.Draw(Texture1, new Vector2(20, 20), new Vector2(100, 100), MathHelper.DegreesToRadians(40), Color.Red, new Vector2(20, 20));
 
             Spritebatch.End(window);
 

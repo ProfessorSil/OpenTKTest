@@ -38,7 +38,7 @@ namespace OpenTKTest
         /// <summary>
         /// Generally called before Spritebatch.Begin()
         /// </summary>
-        public static void Clear(ClearBufferMask mask = (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit))
+        public static void Clear(ClearBufferMask mask)
         {
             GL.Clear(mask);
         }
@@ -48,7 +48,8 @@ namespace OpenTKTest
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(-1.0, 1.0, 1.0, -1.0, 0.0, depthMax);
-            
+
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Begin(PrimitiveType.Quads);
         }
 

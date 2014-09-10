@@ -49,6 +49,7 @@
     <Compile Include="Calc.cs" />
     <Compile Include="ContentPipe.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="My.cs" />
     <Compile Include="MyTextWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
