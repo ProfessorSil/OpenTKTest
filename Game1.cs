@@ -13,9 +13,16 @@ namespace OpenTKTest
 {
     class Game1
     {
+        public static double WINDOW_FRAMERATE = 60.0;
+        public static int WINDOW_WIDTH = 640;
+        public static int WINDOW_HEIGHT = 480;
+        public static string WINDOW_NAME = "OpenTK Test";
+        public static GameWindowFlags WINDOW_FLAGS = GameWindowFlags.Default;
+
         public OpenTK.GameWindow window;
-        int Texture1;
+        Texture2D Texture1;
         float rotation = 0;
+        public View view;
 
         /// <summary>
         /// This automatically binds Game1's function to window's events
@@ -37,6 +44,8 @@ namespace OpenTKTest
             Spritebatch.Initialize(window);
 
             Vector2 o = Calc.RotateAround(new Vector2(4, 3), new Vector2(2, 2), MathHelper.PiOver3);
+
+            view = new View(window, Vector2.Zero, 2.0, 1.0, 0.0);
         }
 
         public void Load(object sender, EventArgs e)
@@ -66,29 +75,26 @@ namespace OpenTKTest
                 rotation += 10;
             }
 
+            view.BasicMovement(5.0f, true, false);
+            if (My.KeyDown(Key.E))
+            {
+                view.Rotate(1);
+            }
+            if (My.KeyDown(Key.Q))
+            {
+                view.Rotate(-1);
+            }
+            view.Update();
+
             My.UpdateAfter();
         }
 
         public void Render(object sender, EventArgs e)
         {
-            Spritebatch.Begin();
+            Spritebatch.Begin(4.0f, view);
 
-            GL.BindTexture(TextureTarget.Texture2D, Texture1);
-
-            GL.TexCoord2(0.0, 0.0);
-            GL.Vertex3(-0.8f, 0.8f, 0.0f);
-
-            GL.TexCoord2(1.0, 0.0);
-            GL.Vertex3(0.8f, 0.8f, 0.0f);
-
-            GL.TexCoord2(1.0, 1.0);
-            GL.Vertex3(0.8f, -0.8f, 0.0f);
-
-            GL.TexCoord2(0.0, 1.0);
-            GL.Vertex3(-0.8f, -0.8f, 0.0f);
-
-            Spritebatch.Draw(Texture1, new Vector2(20, 20), new Vector2(100, 100), MathHelper.DegreesToRadians(rotation), Color.Red, new Vector2(20, 20));
-            Spritebatch.Draw(Texture1, new Vector2(20, 20), new Vector2(100, 100), MathHelper.DegreesToRadians(20));
+            Spritebatch.Draw(Texture1.Id, new Vector2(20, 20), new Vector2(100, 100), MathHelper.DegreesToRadians(rotation), Color.Red, new Vector2(20, 20));
+            Spritebatch.Draw(Texture1.Id, new Vector2(20, 20), new Vector2(100, 100), MathHelper.DegreesToRadians(20));
 
             Spritebatch.End(window);
 

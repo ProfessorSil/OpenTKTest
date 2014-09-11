@@ -43,11 +43,16 @@ namespace OpenTKTest
             GL.Clear(mask);
         }
 
-        public static void Begin(float depthMax = 4.0f)
+        public static void Begin(float depthMax = 4.0f, View view = null)
         {
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(-1.0, 1.0, 1.0, -1.0, 0.0, depthMax);
+
+            if (view != null)
+            {
+                view.ApplyTransform();
+            }
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Begin(PrimitiveType.Quads);
@@ -97,7 +102,6 @@ namespace OpenTKTest
         /// 
         /// </summary>
         /// <param name="rotation">In Radians</param>
-        /// <param name="color">Currently not functioning. Need to research OpenGL a bit more.</param>
         public static void Draw(int Texture, Vector2 position, Vector2 size, float rotation, Color color, Vector2 origin, float depth)
         {
             Vector2[] p = new Vector2[4]{Vector2.Zero, Vector2.Zero ,Vector2.Zero, Vector2.Zero};
@@ -124,13 +128,11 @@ namespace OpenTKTest
                 p[i] = new Vector2(p[i].X / (ScreenSize.Width / 2f), p[i].Y / (ScreenSize.Height / 2f));
 
 
-                //GL.Color4(color);
+                GL.Color4(color);
                 GL.TexCoord2(tC[i]);
-                GL.Vertex2(p[i]);
-                //GL.Vertex3(new Vector3(p[i].X, p[i].Y, depth));
+                //GL.Vertex2(p[i]);
+                GL.Vertex3(new Vector3(p[i].X, p[i].Y, depth));
             }
-
-            int asdasd = 0;
         }
 
         

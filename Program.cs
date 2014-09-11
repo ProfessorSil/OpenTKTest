@@ -18,10 +18,10 @@ namespace OpenTKTest
         [STAThread]
         static void Main(string[] args)
         {
-            GameWindow window = new GameWindow(640, 480, GraphicsMode.Default, "OpenTK Test 1");
+            GameWindow window = new GameWindow(Game1.WINDOW_WIDTH, Game1.WINDOW_HEIGHT, GraphicsMode.Default, Game1.WINDOW_NAME, Game1.WINDOW_FLAGS);
             Game1 game = new Game1(window);
 
-            window.Run(60.0);
+            window.Run(Game1.WINDOW_FRAMERATE);
         }
     }
 }

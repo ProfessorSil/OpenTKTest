@@ -13,18 +13,18 @@ namespace OpenTKTest
     class ContentPipe
     {
 
-        public static int LoadTexture(string filename, bool pixelated = true)
+        public static Texture2D LoadTexture(string filename, bool pixelated = true)
         {
             if (String.IsNullOrEmpty(filename))
             {
                 throw new ArgumentException(filename);
-                return 0;
+                return new Texture2D();
             }
 
             if (!System.IO.File.Exists(filename))
             {
                 throw new ArgumentException(filename);
-                return 0;
+                return new Texture2D();
             }
 
             int id = GL.GenTexture();
@@ -39,6 +39,8 @@ namespace OpenTKTest
                 bmpData.Width, bmpData.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
                 PixelType.UnsignedByte, bmpData.Scan0);
 
+            Texture2D tex = new Texture2D(filename, id, bmp.Width, bmp.Height);
+
             bmp.UnlockBits(bmpData);
 
             //We haven't unloaded mipmaps, so disavle mipmapping (otherwise the texture will not appear).
@@ -47,7 +49,7 @@ namespace OpenTKTest
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, pixelated ? (int)TextureMinFilter.Nearest : (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, pixelated ? (int)TextureMinFilter.Nearest : (int)TextureMinFilter.Linear);
 
-            return id;
+            return tex;
         }
     }
 }
