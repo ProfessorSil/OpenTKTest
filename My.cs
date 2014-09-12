@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Drawing.Imaging;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Graphics;
@@ -19,21 +20,21 @@ namespace OpenTKTest
         private static List<MouseButton> mousePressed;
         private static List<MouseButton> mousePressedLast;
 
-        public int NumKeysPress
+        public static int NumKeysPress
         {
             get
             {
                 return keysPressed.Count;
             }
         }
-        public int NumKeysPressLast
+        public static int NumKeysPressLast
         {
             get
             {
                 return keysPressedLast.Count;
             }
         }
-        public Key[] KeysPressed
+        public static Key[] KeysPressed
         {
             get
             {
@@ -42,7 +43,7 @@ namespace OpenTKTest
                 return o;
             }
         }
-        public Key[] KeysPressedLast
+        public static Key[] KeysPressedLast
         {
             get
             {
@@ -51,6 +52,8 @@ namespace OpenTKTest
                 return o;
             }
         }
+
+        public static Texture2D dot;
 
         public static void Initialize(GameWindow gameWindow)
         {
@@ -63,6 +66,28 @@ namespace OpenTKTest
             window.Keyboard.KeyUp += Keyboard_KeyUp;
             window.Mouse.ButtonDown += Mouse_ButtonDown;
             window.Mouse.ButtonUp += Mouse_ButtonUp;
+
+            #region Create dot texture
+            {
+                int id = GL.GenTexture();
+                GL.BindTexture(TextureTarget.Texture2D, id);
+
+                Bitmap bmp = new Bitmap(1, 1);
+                bmp.SetPixel(0, 0, Color.White);
+                BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, 1, 1), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
+                    1, 1, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
+                    PixelType.UnsignedByte, bmpData.Scan0);
+
+                dot = new Texture2D("dot", id, 1, 1);
+
+                bmp.UnlockBits(bmpData);
+
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
+            }
+            #endregion
         }
 
         static void Mouse_ButtonDown(object sender, MouseButtonEventArgs e)

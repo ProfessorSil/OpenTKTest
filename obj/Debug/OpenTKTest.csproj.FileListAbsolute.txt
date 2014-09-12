@@ -18,3 +18,9 @@ C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\De
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\OpenTK.pdb
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\OpenTK.xml
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\obj\Debug\OpenTKTest.csprojResolveAssemblyReference.cache
+C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\QuickFont.dll
+C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\QuickFont.pdb
+C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\TIMES.TTF
+C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\TIMESBD.TTF
+C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\TIMESBI.TTF
+C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\TIMESI.TTF

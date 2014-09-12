@@ -18,10 +18,7 @@ namespace OpenTKTest
     /// </summary>
     class View
     {
-        //TODO: Add some properties for easily obtaining viewPort
-        //TODO: Add properties and values for when view is rotated
         //TODO: Add renderViewport on screen funcionality
-        //TODO: Test most of this functionality. (ApplyTransform() might be deforming things a bit with scaling)
 
         private GameWindow window;
 
@@ -90,87 +87,143 @@ namespace OpenTKTest
             }
         }
         /// <summary>
-        /// Only valid if no rotation! 
         /// It will return the left side of the view's x-value
         /// </summary>
         public float LeftWorld
         {
             get
             {
-                return position.X - SizeWorld.X / 2f;
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return position.X - SizeWorld.X / 2f;
+                }
+                else
+                {
+                    return Math.Min(TopLeft.X, Math.Min(TopRight.X, Math.Min(BottomLeft.X, BottomRight.X)));
+                }
             }
         }
         /// <summary>
-        /// Only valid if no rotation! 
         /// It will return the right side of the view's x-value
         /// </summary>
         public float RightWorld
         {
             get
             {
-                return position.X + SizeWorld.X / 2f;
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return position.X + SizeWorld.X / 2f;
+                }
+                else
+                {
+                    return Math.Max(TopLeft.X, Math.Max(TopRight.X, Math.Max(BottomLeft.X, BottomRight.X)));
+                }
             }
         }
         /// <summary>
-        /// Only valid if no rotation! 
         /// It will return the top side of the view's x-value
         /// </summary>
         public float TopWorld
         {
             get
             {
-                return position.Y - SizeWorld.Y / 2f;
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return position.Y - SizeWorld.Y / 2f;
+                }
+                else
+                {
+                    return Math.Min(TopLeft.Y, Math.Min(TopRight.Y, Math.Min(BottomLeft.Y, BottomRight.Y)));
+                }
             }
         }
         /// <summary>
-        /// Only valid if no rotation! 
         /// It will return the bottom side of the view's x-value
         /// </summary>
         public float BottomWorld
         {
             get
             {
-                return position.Y + SizeWorld.Y / 2f;
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return position.Y + SizeWorld.Y / 2f;
+                }
+                else
+                {
+                    return Math.Max(TopLeft.Y, Math.Max(TopRight.Y, Math.Max(BottomLeft.Y, BottomRight.Y)));
+                }
             }
         }
         /// <summary>
         /// Returns the point at the TopLeft corner of the view in world Coordinates
+        /// Works with rotation
         /// </summary>
         public Vector2 TopLeft
         {
             get
             {
-                return new Vector2(LeftWorld, TopWorld);
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return new Vector2(LeftWorld, TopWorld);
+                }
+                else
+                {
+                    return Calc.RotateAround(new Vector2(LeftWorld, TopWorld), new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation));
+                }
             }
         }
         /// <summary>
         /// Returns the point at the TopRight corner of the view in world Coordinates
+        /// Works with rotation
         /// </summary>
         public Vector2 TopRight
         {
             get
             {
-                return new Vector2(RightWorld, TopWorld);
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return new Vector2(RightWorld, TopWorld);
+                }
+                else
+                {
+                    return Calc.RotateAround(new Vector2(RightWorld, TopWorld), new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation));
+                }
             }
         }
         /// <summary>
         /// Returns the point at the BottomLeft corner of the view in world Coordinates
+        /// Works with rotation
         /// </summary>
         public Vector2 BottomLeft
         {
             get
             {
-                return new Vector2(LeftWorld, BottomWorld);
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return new Vector2(LeftWorld, BottomWorld);
+                }
+                else
+                {
+                    return Calc.RotateAround(new Vector2(LeftWorld, BottomWorld), new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation));
+                }
             }
         }
         /// <summary>
         /// Returns the point at the BottomRight corner of the view in world Coordinates
+        /// Works with rotation
         /// </summary>
         public Vector2 BottomRight
         {
             get
             {
-                return new Vector2(RightWorld, BottomWorld);
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return new Vector2(RightWorld, BottomWorld);
+                }
+                else
+                {
+                    return Calc.RotateAround(new Vector2(RightWorld, BottomWorld), new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation));
+                }
             }
         }
         #endregion
@@ -293,46 +346,97 @@ namespace OpenTKTest
         /// </summary>
         public void CheckLimits()
         {
-            //TODO: Make this work if the view is rotated
-            if (minX != float.MinValue)
+            if (rotation == 0 || enableRotation == false)
             {
-                if (LeftWorld < minX)
+                if (minX != float.MinValue)
                 {
-                    position.X = minX + SizeWorld.X / 2f;
+                    if (LeftWorld < minX)
+                    {
+                        position.X = minX + SizeWorld.X / 2f;
+                    }
                 }
-            }
-            if (minY != float.MinValue)
-            {
-                if (TopWorld < minY)
+                if (minY != float.MinValue)
                 {
-                    position.Y = minY + SizeWorld.Y / 2f;
+                    if (TopWorld < minY)
+                    {
+                        position.Y = minY + SizeWorld.Y / 2f;
+                    }
                 }
-            }
-            if (maxX != float.MaxValue)
-            {
-                if (RightWorld < maxX)
+                if (maxX != float.MaxValue)
                 {
-                    position.X = maxX - SizeWorld.X / 2f;
+                    if (RightWorld > maxX)
+                    {
+                        position.X = maxX - SizeWorld.X / 2f;
+                    }
                 }
-            }
-            if (maxY != float.MaxValue)
-            {
-                if (BottomWorld < maxY)
+                if (maxY != float.MaxValue)
                 {
-                    position.Y = maxY - SizeWorld.Y / 2f;
+                    if (BottomWorld > maxY)
+                    {
+                        position.Y = maxY - SizeWorld.Y / 2f;
+                    }
                 }
-            }
 
-            //We need to handle if the bounds are smaller than the view size
-            if (minX != float.MinValue && maxX != float.MaxValue && maxX - minX <= SizeWorld.X)
-            {
-                //Center the position X between minX and maxX
-                position.X = (maxX + minX) / 2f;
+                //We need to handle if the bounds are smaller than the view size
+                if (minX != float.MinValue && maxX != float.MaxValue && maxX - minX <= SizeWorld.X)
+                {
+                    //Center the position X between minX and maxX
+                    position.X = (maxX + minX) / 2f;
+                }
+                if (minY != float.MinValue && maxY != float.MaxValue && maxY - minY <= SizeWorld.Y)
+                {
+                    //Center the position Y between minY and maxY
+                    position.Y = (maxY + minY) / 2f;
+                }
             }
-            if (minY != float.MinValue && maxY != float.MaxValue && maxY - minY <= SizeWorld.Y)
+            else
             {
-                //Center the position Y between minY and maxY
-                position.Y = (maxY + minY) / 2f;
+                Vector2 tl = TopLeft, tr = TopRight, bl = BottomLeft, br = BottomRight;
+                float mostX = Math.Max(tl.X, Math.Max(tr.X, Math.Max(bl.X, br.X)));
+                float leastX = Math.Min(tl.X, Math.Min(tr.X, Math.Min(bl.X, br.X)));
+                float mostY = Math.Max(tl.Y, Math.Max(tr.Y, Math.Max(bl.Y, br.Y)));
+                float leastY = Math.Min(tl.Y, Math.Min(tr.Y, Math.Min(bl.Y, br.Y)));
+
+                if (minX != float.MinValue)
+                {
+                    if (leastX < minX)
+                    {
+                        position.X = position.X + (minX - leastX);
+                    }
+                }
+                if (minY != float.MinValue)
+                {
+                    if (leastY < minY)
+                    {
+                        position.Y = position.Y + (minY - leastY);
+                    }
+                }
+                if (maxX != float.MaxValue)
+                {
+                    if (mostX > maxX)
+                    {
+                        position.X = position.X - (mostX - maxX);
+                    }
+                }
+                if (maxY != float.MaxValue)
+                {
+                    if (mostY > maxY)
+                    {
+                        position.Y = position.Y - (mostY - maxY);
+                    }
+                }
+
+                //We need to handle if the bounds are smaller than the view size
+                if (minX != float.MinValue && maxX != float.MaxValue && maxX - minX <= mostX - leastX)
+                {
+                    //Center the position X between minX and maxX
+                    position.X = (maxX + minX) / 2f;
+                }
+                if (minY != float.MinValue && maxY != float.MaxValue && maxY - minY <= mostY - leastY)
+                {
+                    //Center the position Y between minY and maxY
+                    position.Y = (maxY + minY) / 2f;
+                }
             }
         }
 
@@ -395,8 +499,7 @@ namespace OpenTKTest
         {
             Matrix4 world = Matrix4.Identity;
 
-            //1f are to center the picture on the screen
-            world = Matrix4.Mult(world, Matrix4.CreateTranslation(-position.X / window.ClientSize.Width + 1f, -position.Y / window.ClientSize.Height + 1f, 0));
+            world = Matrix4.Mult(world, Matrix4.CreateTranslation(-position.X, -position.Y, 0));
 
             if (enableRotation)
                 world = Matrix4.Mult(world, Matrix4.CreateRotationZ((float)MathHelper.DegreesToRadians(rotation)));
@@ -407,7 +510,6 @@ namespace OpenTKTest
             //TODO: Aspect Ratio still skews pictures!
             if (enableZoom)
                 world = Matrix4.Mult(world, Matrix4.CreateScale((float)zoom, (float)zoom, 0.0f));
-
 
             GL.MultMatrix(ref world);
         }
