@@ -59,7 +59,7 @@ namespace OpenTKTest
 
         public void Load(object sender, EventArgs e)
         {
-            font = new QFont("Content\\TIMESBD.ttf", 16);
+            font = new QFont("Content\\TIMESBD.ttf", 16, FontStyle.Bold);
 
             #region Loading Stuff
 
