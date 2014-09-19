@@ -19,6 +19,8 @@ namespace OpenTKTest
         private static List<Key> keysPressedLast;
         private static List<MouseButton> mousePressed;
         private static List<MouseButton> mousePressedLast;
+        public static int WheelValue, WheelValueLast;
+        public static float WheelPrecise, WheelPreciseLast;
 
         public static int NumKeysPress
         {
@@ -66,6 +68,7 @@ namespace OpenTKTest
             window.Keyboard.KeyUp += Keyboard_KeyUp;
             window.Mouse.ButtonDown += Mouse_ButtonDown;
             window.Mouse.ButtonUp += Mouse_ButtonUp;
+            window.Mouse.WheelChanged += Mouse_WheelChanged;
 
             #region Create dot texture
             {
@@ -88,6 +91,12 @@ namespace OpenTKTest
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
             }
             #endregion
+        }
+
+        static void Mouse_WheelChanged(object sender, MouseWheelEventArgs e)
+        {
+            WheelValue = e.Value;
+            WheelPrecise = e.ValuePrecise;
         }
 
         static void Mouse_ButtonDown(object sender, MouseButtonEventArgs e)
@@ -138,6 +147,9 @@ namespace OpenTKTest
             {
                 mousePressedLast.Add(mousePressed[i]);
             }
+
+            WheelValueLast = WheelValue;
+            WheelPreciseLast = WheelPrecise;
         }
 
         public static bool KeyPress(Key key)
@@ -176,6 +188,23 @@ namespace OpenTKTest
         public static bool MouseDown(bool left)
         {
             return (left ? MouseDown(MouseButton.Left) : MouseDown(MouseButton.Right));
+        }
+
+        public static int WheelChange()
+        {
+            return WheelValue - WheelValueLast;
+        }
+        public static float WheelChangePrecise()
+        {
+            return WheelPrecise - WheelPreciseLast;
+        }
+        public static bool WheelMovedUp()
+        {
+            return WheelValue > WheelValueLast;
+        }
+        public static bool WheelMovedDown()
+        {
+            return WheelValue < WheelValueLast;
         }
     }
 }
