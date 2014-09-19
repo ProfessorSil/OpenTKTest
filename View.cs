@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Drawing.Imaging;
 using OpenTK;
 using OpenTK.Input;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using QuickFont;
 
 namespace OpenTKTest
 {
@@ -168,8 +163,15 @@ namespace OpenTKTest
                 }
                 else
                 {
-                    return Calc.RotateAround(new Vector2(LeftWorld, TopWorld), new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation));
+                    return Calc.RotateAround(new Vector2(-SizeWorld.X / 2f, -SizeWorld.Y / 2f),
+                        new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation))
+                        + position;
                 }
+            }
+            set
+            {
+                position = new Vector2(value.X + SizeWorld.X / 2f, value.Y + SizeWorld.Y / 2f);
+                positionGoto = position;
             }
         }
         /// <summary>
@@ -186,8 +188,15 @@ namespace OpenTKTest
                 }
                 else
                 {
-                    return Calc.RotateAround(new Vector2(RightWorld, TopWorld), new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation));
+                    return Calc.RotateAround(new Vector2(SizeWorld.X / 2f, -SizeWorld.Y / 2f),
+                        new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation))
+                        + position;
                 }
+            }
+            set
+            {
+                position = new Vector2(value.X - SizeWorld.X / 2f, value.Y + SizeWorld.Y / 2f);
+                positionGoto = position;
             }
         }
         /// <summary>
@@ -204,8 +213,15 @@ namespace OpenTKTest
                 }
                 else
                 {
-                    return Calc.RotateAround(new Vector2(LeftWorld, BottomWorld), new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation));
+                    return Calc.RotateAround(new Vector2(-SizeWorld.X / 2f, SizeWorld.Y / 2f),
+                        new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation))
+                        + position;
                 }
+            }
+            set
+            {
+                position = new Vector2(value.X + SizeWorld.X / 2f, value.Y - SizeWorld.Y / 2f);
+                positionGoto = position;
             }
         }
         /// <summary>
@@ -222,8 +238,56 @@ namespace OpenTKTest
                 }
                 else
                 {
-                    return Calc.RotateAround(new Vector2(RightWorld, BottomWorld), new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation));
+                    return Calc.RotateAround(new Vector2(SizeWorld.X / 2f, SizeWorld.Y / 2f),
+                        new Vector2(0, 0), (float)MathHelper.DegreesToRadians(rotation))
+                        + position;
                 }
+            }
+            set
+            {
+                position = new Vector2(value.X - SizeWorld.X / 2f, value.Y - SizeWorld.Y / 2f);
+                positionGoto = position;
+            }
+        }
+        /// <summary>
+        /// The viewport given in worlds coordinates
+        /// If there is a rotation it will return a RectangleF
+        /// encompasses the whole rotated viewport
+        /// </summary>
+        public RectangleF ViewPort
+        {
+            get
+            {
+                if (rotation == 0 || enableRotation == false)
+                {
+                    return new RectangleF(LeftWorld, TopWorld, SizeWorld.X, SizeWorld.Y);
+                }
+                else
+                {
+                    float l = LeftWorld;
+                    float t = TopWorld;
+                    return new RectangleF(l, t, RightWorld - l, BottomWorld - t);
+                }
+            }
+        }
+        /// <summary>
+        /// The mouse position in world coordinates as a Vector2
+        /// </summary>
+        public Vector2 MousePos
+        {
+            get
+            {
+                return ToWorld(new Vector2(window.Mouse.X, window.Mouse.Y));
+            }
+        }
+        /// <summary>
+        /// The mouse position in world coordinates as a Point
+        /// </summary>
+        public Point MousePoint
+        {
+            get
+            {
+                return ToWorld(new Point(window.Mouse.X, window.Mouse.Y));
             }
         }
         #endregion
@@ -446,7 +510,7 @@ namespace OpenTKTest
         /// <param name="speed">Spped at which the camera will move each step</param>
         /// <param name="WASDKeys">true = WASD keys; false = Arrow Keys;</param>
         /// <param name="dependantOnZoom">If true then speed will be scaled depending on zoom value</param>
-        public void BasicMovement(float speed, bool WASDKeys = true, bool dependantOnZoom = false)
+        public void BasicMovement(float speed, bool WASDKeys = true, bool dependantOnZoom = false, bool allowRotation = false, bool allowZoom = false)
         {
             float realSpeed = speed * (dependantOnZoom ? (1.0f / (float)zoom) : (1.0f));
 
@@ -488,6 +552,28 @@ namespace OpenTKTest
                     positionGoto.X += realSpeed;
                 }
             }
+            if (allowRotation)
+            {
+                if (My.KeyDown(Key.E))
+                {
+                    Rotate(1);
+                }
+                if (My.KeyDown(Key.Q))
+                {
+                    Rotate(-1);
+                }
+            }
+            if (allowZoom)
+            {
+                if (My.KeyDown(Key.Z))
+                {
+                    zoom += 0.01;
+                }
+                if (My.KeyDown(Key.X))
+                {
+                    zoom -= 0.01;
+                }
+            }
         }
 
         /// <summary>
@@ -512,6 +598,70 @@ namespace OpenTKTest
                 world = Matrix4.Mult(world, Matrix4.CreateScale((float)zoom, (float)zoom, 0.0f));
 
             GL.MultMatrix(ref world);
+        }
+
+        public Vector2 ToScreen(float x, float y)
+        {
+            return ToScreen(new Vector2(x, y));
+        }
+        public Point ToScreen(Point worldPos)
+        {
+            Vector2 pos = ToScreen(new Vector2(worldPos.X, worldPos.Y));
+            return new Point((int)Math.Round(pos.X, 0), (int)Math.Round(pos.Y, 0));
+        }
+        /// <summary>
+        /// Takes a position in world coordinates and returns it in screen coordinates
+        /// </summary>
+        /// <param name="worldPos">Position in the world</param>
+        /// <returns>Position on the screen</returns>
+        public Vector2 ToScreen(Vector2 worldPos)
+        {
+            Vector2 pos = worldPos;
+            pos -= position;
+            pos *= (float)zoom;
+            pos = Calc.RotateAround(pos, Vector2.Zero, (float)MathHelper.DegreesToRadians(rotation));
+            pos += new Vector2(SizeScreen.Width / 2f, SizeScreen.Height / 2f);
+            return pos;
+        }
+
+        public Vector2 ToWorld(float x, float y)
+        {
+            return ToWorld(new Vector2(x, y));
+        }
+        public Point ToWorld(Point screenPos)
+        {
+            Vector2 pos = ToWorld(new Vector2(screenPos.X, screenPos.Y));
+            return new Point((int)Math.Round(pos.X, 0), (int)Math.Round(pos.Y, 0));
+        }
+        /// <summary>
+        /// Taks the position in screen coordinates and returns it in world coordinates
+        /// </summary>
+        /// <param name="screenPos">Position on the screen</param>
+        /// <returns>Position in world</returns>
+        public Vector2 ToWorld(Vector2 screenPos)
+        {
+            Vector2 pos = screenPos;
+            pos -= new Vector2(SizeScreen.Width / 2f, SizeScreen.Height / 2f);
+            pos = Calc.RotateAround(pos, Vector2.Zero, -(float)(MathHelper.DegreesToRadians(rotation)));
+            pos /= (float)zoom;
+            pos += position;
+            return pos;
+        }
+
+        public void DrawDebug(QFont font, Vector2 pos, Color color, QFontAlignment alignment = QFontAlignment.Left)
+        {
+            QFontRenderOptions op = new QFontRenderOptions();
+            op.Colour = color;
+            op.DropShadowActive = true;
+            op.DropShadowOffset = new Vector2(2, 2);
+            font.PushOptions(op);
+            font.Print(String.Format(
+                "x {0}\ny {1}\nz {2}\nr {3}",
+                Math.Round(position.X, 1),
+                Math.Round(position.Y, 1),
+                Math.Round(zoom, 4),
+                Math.Round(rotation, 0)),
+                alignment, pos);
         }
     }
 }

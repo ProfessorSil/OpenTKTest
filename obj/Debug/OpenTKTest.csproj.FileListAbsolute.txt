@@ -11,7 +11,6 @@ C:\Users\Taylor\Documents\MyStuff\Projects\C++\Tests\OpenTKTest\OpenTKTest\bin\D
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\OpenTKTest.exe.config
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\obj\Debug\OpenTKTest.exe
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\obj\Debug\OpenTKTest.pdb
-C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\block1.png
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\OpenTKTest.exe
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\OpenTKTest.pdb
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\OpenTK.dll
@@ -22,5 +21,3 @@ C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\De
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\QuickFont.pdb
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\TIMES.TTF
 C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\TIMESBD.TTF
-C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\TIMESBI.TTF
-C:\Users\Taylor\Documents\MyStuff\Projects\C#\Tests\OpenTKTest\OpenTKTest\bin\Debug\Content\TIMESI.TTF

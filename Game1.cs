@@ -21,10 +21,14 @@ namespace OpenTKTest
         public static GameWindowFlags WINDOW_FLAGS = GameWindowFlags.Default;
 
         public OpenTK.GameWindow window;
-        Texture2D Texture1, Texture2;
-        float rotation = 0;
         public View view;
         public QFont font;
+
+        #region Variables
+
+
+
+        #endregion
 
         /// <summary>
         /// This automatically binds Game1's function to window's events
@@ -38,26 +42,30 @@ namespace OpenTKTest
             window.Resize += this.Resize;
             window.RenderFrame += this.Render;
             window.UpdateFrame += this.Update;
-
             window.VSync = VSyncMode.Off;
-
             My.Initialize(window);
-
             Spritebatch.Initialize(window);
 
-            Vector2 o = Calc.RotateAround(new Vector2(4, 3), new Vector2(2, 2), MathHelper.PiOver3);
-
-            view = new View(window, Vector2.Zero, 10.0, 1, 0.0);
+            view = new View(window, Vector2.Zero);
+            view.TopLeft = Vector2.Zero;
             view.enableRounding = false;
+
+            #region Initialization
+
+
+
+            #endregion
         }
 
         public void Load(object sender, EventArgs e)
         {
-            Texture1 = ContentPipe.LoadTexture(@".\Content\shutdown.png");
-            Texture2 = ContentPipe.LoadTexture(@".\Content\block1.png");
             font = new QFont("Content\\TIMESBD.ttf", 16);
 
-            Console.WriteLine("Texture1 is " + Texture1.ToString() + ".");
+            #region Loading Stuff
+
+
+
+            #endregion
         }
 
         public void Close()
@@ -75,28 +83,13 @@ namespace OpenTKTest
                 window.Exit();
             }
 
-            if (My.MouseDown(false))
-            {
-                rotation += 10;
-            }
+            #region Update Stuff
 
-            view.BasicMovement(5.0f, true, false);
-            if (My.KeyDown(Key.E))
-            {
-                view.Rotate(1);
-            }
-            if (My.KeyDown(Key.Q))
-            {
-                view.Rotate(-1);
-            }
-            if (My.KeyDown(Key.Z))
-            {
-                view.zoom += 0.01;
-            }
-            if (My.KeyDown(Key.X))
-            {
-                view.zoom -= 0.01;
-            }
+
+
+            #endregion
+
+            view.BasicMovement(5.0f, true, false, true, true);
             view.Update();
 
             My.UpdateAfter();
@@ -104,29 +97,26 @@ namespace OpenTKTest
 
         public void Render(object sender, EventArgs e)
         {
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
+            Spritebatch.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             Spritebatch.Begin(4.0f, view);
+            Spritebatch.ClearColor(Color.White, ref view);
 
-            Spritebatch.Draw(Texture1.Id, new Vector2(0, 0), new Vector2(100, 100), MathHelper.DegreesToRadians(rotation), Color.Red, new Vector2(20, 20));
-            Spritebatch.Draw(Texture1.Id, new Vector2(0, 0), new Vector2(100, 100), MathHelper.DegreesToRadians(20));
-            Spritebatch.Draw(My.dot.Id, new Vector2(0, 0), new Vector2(20, 20), 0.0f, Color.Purple);
+            #region Drawing Stuff
+
+
+
+            #endregion
 
             Spritebatch.End();
 
             QFont.Begin();
-            QFontRenderOptions op = new QFontRenderOptions();
-            op.Colour = Color.Red;
-            op.DropShadowActive = true;
-            op.DropShadowOffset = new Vector2(2, 2);
-            font.PushOptions(op);
-            font.Print(String.Format(
-                "x {0}\ny {1}\nz {2}\nr {3}", 
-                Math.Round(view.position.X, 1),
-                Math.Round(view.position.Y, 1),
-                Math.Round(view.zoom, 4),
-                Math.Round(view.rotation, 0)),
-                100f, QFontAlignment.Left, new Vector2(0, 0));
+
+            #region Drawing Text
+            view.DrawDebug(font, Vector2.Zero, Color.Black);
+
+
+            #endregion
+
             QFont.End();
 
             window.SwapBuffers();
@@ -135,6 +125,7 @@ namespace OpenTKTest
         public void Resize(object sender, EventArgs e)
         {
             GL.Viewport(0, 0, window.Width, window.Height);
+            QFont.InvalidateViewport();
         }
     }
 }

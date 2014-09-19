@@ -15,22 +15,23 @@ namespace OpenTKTest
 
         public static Texture2D LoadTexture(string filename, bool pixelated = true)
         {
-            if (String.IsNullOrEmpty(filename))
+            string filePath = "Content/" + filename;
+            if (filePath == "Content/")
             {
-                throw new ArgumentException(filename);
+                throw new ArgumentException(filePath);
                 return new Texture2D();
             }
 
-            if (!System.IO.File.Exists(filename))
+            if (!System.IO.File.Exists(filePath))
             {
-                throw new ArgumentException(filename);
+                throw new ArgumentException(filePath);
                 return new Texture2D();
             }
 
             int id = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, id);
 
-            Bitmap bmp = new Bitmap(filename);
+            Bitmap bmp = new Bitmap(filePath);
             BitmapData bmpData = bmp.LockBits(
                 new Rectangle(0, 0, bmp.Width, bmp.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);

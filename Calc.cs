@@ -40,6 +40,22 @@ namespace OpenTKTest
         }
 
         /// <summary>
+        /// Returns the distance between the two points
+        /// </summary>
+        public static float Distance(Vector2 p1, Vector2 p2)
+        {
+            return (float)Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+        }
+        /// <summary>
+        /// Returns the distance squared between the two points
+        /// Useful when efficiency is important
+        /// </summary>
+        public static float DistanceSquared(Vector2 p1, Vector2 p2)
+        {
+            return (float)(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+        }
+
+        /// <summary>
         /// Does a continuous collision check between two Rectangles (one of them moving, other static)
         /// </summary>
         /// <param name="staticRec">The static rectangle</param>
