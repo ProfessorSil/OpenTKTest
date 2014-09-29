@@ -36,7 +36,8 @@ namespace OpenTKTest
         /// </summary>
         public static double DirectionTo(Vector2 from, Vector2 to)
         {
-            return Math.Atan2(to.Y - from.Y, to.X - from.X);
+            double dir = Math.Atan2(to.Y - from.Y, to.X - from.X);
+            return (dir < 0) ? (dir + MathHelper.Pi * 2) : (dir);
         }
 
         /// <summary>

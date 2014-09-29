@@ -105,7 +105,10 @@ namespace OpenTKTest
         }
         static void Mouse_ButtonUp(object sender, MouseButtonEventArgs e)
         {
-            mousePressed.Remove(e.Button);
+            while (mousePressed.Contains(e.Button))
+            {
+                mousePressed.Remove(e.Button);
+            }
         }
 
         private static void Keyboard_KeyDown(object sender, KeyboardKeyEventArgs e)
@@ -114,7 +117,10 @@ namespace OpenTKTest
         }
         static void Keyboard_KeyUp(object sender, KeyboardKeyEventArgs e)
         {
-            keysPressed.Remove(e.Key);
+            while (keysPressed.Contains(e.Key))
+            {
+                keysPressed.Remove(e.Key);
+            }
         }
 
         /// <summary>
